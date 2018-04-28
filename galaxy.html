@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>DiviBikes</title>
+      <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
+      <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.js"></script>
+      <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+
+      <style type="text/css" media="screen">
+        html,body{
+          width: 100%;
+          height: 100%;
+          margin:0px;
+          padding:0px;
+        }
+        #map{
+          width:100%;
+          height: 100%;
+        }
+      </style>
+  </head>
+  <body>
+    <div id='map' />
+      <script charset="utf-8">
+          mapboxgl.accessToken = 'pk.eyJ1IjoiemluZ2JvdCIsImEiOiJJU1NqTEdrIn0.hzY0M7fDqT5nMAgCffDCbg';
+          var base_style = 'mapbox://styles/mapbox/navigation-guidance-night-v2'
+
+          var map = new mapboxgl.Map({
+              container: 'map',
+              style: base_style,
+              zoom: 0,
+              center: [0,0]
+                  });
+
+					carto.setDefaultAuth({
+						user: 'jferzoco',
+						apiKey: 'KzY3NaOqHEc_ucstf0mVTQ'
+					});
+
+					const planets= new carto.source.Dataset(`
+              planets					
+              `);
+
+					const planetsViz = new carto.Viz(`
+            width:1
+						color: rgb(255,0,0)
+            strokeWidth: .25
+					`);
+
+          const lines = new carto.source.Dataset(`
+                hyperspace`)
+
+          const lineViz = new carto.Viz ('width:7  color:opacity(rgb(255,0,0), 0.15)'
+             );
+
+          // const linesViz = (selection)=>{
+          //   console.log('selection', selection)
+          //   if(selection){
+          //     return new carto.Viz(`
+          //       color: opacity(ramp(linear($no_trips,1,99),[#ff00cc,#00ccff]),0.2)
+          //       filter: eq($from_station_id ,${selection})
+          //       width: 1
+          //     `)
+          //   }
+          //   else{
+          //     return new carto.Viz(`
+          //       filter: 0
+          //     `)
+          //   }
+          // }
+
+					const layerPlanets = new carto.Layer('planets', planets, planetsViz);
+					const layerLines = new carto.Layer('lines', lines, lineViz);
+
+          // const interactivity = new carto.Interactivity(layerStations)
+          layerLines.addTo(map, 'watername_ocean');
+					layerPlanets.addTo(map, 'lines');
+
+          // interactivity.on('featureEnter',(a)=>{
+          //   console.log(a.features[0].variables)
+          //   layerLines.blendToViz(linesViz(a.features[0].variables.stationid.value))
+          // })
+      </script>
+  </body>
+</html>

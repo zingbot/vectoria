@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Four color theorem | CARTO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <!-- Include CARTO VL JS -->
+ <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
+  <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.js"></script>
+  <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css"></script>
+  <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    #map {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      center: [-98.613281,43.866218],
+      zoom: 3,
+      dragRotate: false
+    });
+
+    carto.setDefaultAuth({
+      user: 'aromeu',
+      apiKey: 'YOUR_API_KEY'
+    });
+
+    const linesSource = new carto.source.SQL(`
+      SELECT *
+      FROM world_borders_color_order_lines_segmentize_split
+    `);
+    const linesViz = new carto.Viz(`
+      width: ramp(log($color,1,5),[1.5,1.5])
+      color: ramp(buckets($color, 1, 2, 3, 4), Bold)
+      filter: torque(linear($ord, 0 , 52), 10, fade(0.1,0.5))+0.05
+    `);
+    const linesLayer = new carto.Layer('linesLayer', linesSource, linesViz);
+
+    const polySource = new carto.source.Dataset(`
+      us_states_color_order
+    `);
+    const polyViz = new carto.Viz(`
+      color: ramp(buckets($color, 1, 2, 3, 4,5), Bold)
+      filter: torque(linear($ord, 0, 52), 10, fade(0,120))
+    `);
+    const polyLayer = new carto.Layer('polyLayer', polySource, polyViz);
+
+    linesLayer.addTo(map, 'watername_ocean');
+    polyLayer.addTo(map, 'linesLayer');
+  </script>
+</body>
+</html>
+
