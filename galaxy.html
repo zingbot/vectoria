@@ -45,15 +45,15 @@
               `);
 
 					const planetsViz = new carto.Viz(`
-            width:.5
-						color: rgb(255,255,255)
+            width:zoom($region)
+						color: ramp($region, PRISM),
             strokeWidth: .25
 					`);
 
           const lines = new carto.source.Dataset(`
                 hyperspace`)
 
-          const lineViz = new carto.Viz ('width:2  color:opacity(rgb(255,255,255), 0.15)'
+          const lineViz = new carto.Viz ('width:.15  color:opacity(rgb(255,255,255), 1)'
              );
 
           // const linesViz = (selection)=>{
@@ -83,7 +83,7 @@
           const regions = new carto.source.Dataset(`
                 region`)
 
-          const regionViz = new carto.Viz ('width:2  color:opacity(rgb(255,255,255), 0.15)'
+          const regionViz = new carto.Viz ('width:2  color:opacity(ramp($region, PRISM), .15)'
              );
 					const layerPlanets = new carto.Layer('planets', planets, planetsViz);
 					const layerLines = new carto.Layer('lines', lines, lineViz);
