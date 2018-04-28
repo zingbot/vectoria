@@ -71,13 +71,33 @@
           //     `)
           //   }
           // }
+          // 
+          // 
 
+          const sectors = new carto.source.Dataset(`
+                sector`)
+
+          const sectorViz = new carto.Viz ('width:2  color:opacity(rgb(255,255,255), 0.15)'
+             );
+
+          const regions = new carto.source.Dataset(`
+                region`)
+
+          const regionViz = new carto.Viz ('width:2  color:opacity(rgb(255,255,255), 0.15)'
+             );
 					const layerPlanets = new carto.Layer('planets', planets, planetsViz);
 					const layerLines = new carto.Layer('lines', lines, lineViz);
+          const layerSectors = new carto.Layer('sectors', sectors, sectorViz);
+          const layerRegions = new carto.Layer('regions', regions, regionViz);
+
 
           // const interactivity = new carto.Interactivity(layerStations)
           layerLines.addTo(map);
 					layerPlanets.addTo(map, 'lines');
+          layerSectors.addTo(map);
+          layerRegions.addTo(map);
+
+
 
           // interactivity.on('featureEnter',(a)=>{
           //   console.log(a.features[0].variables)
