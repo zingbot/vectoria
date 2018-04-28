@@ -104,15 +104,7 @@ const popup = new mapboxgl.Popup({
           const layerRegions = new carto.Layer('regions', regions, regionViz);
 
           const interactivity = new carto.Interactivity([layerPlanets]);
-  
-          function setPopupsClick() {
-          interactivity.off('featureHover', updatePopup);
-          interactivity.on('featureClick', updatePopup);
-          }
-          function setPopupsHover() {
-          interactivity.off('featureClick', updatePopup);
           interactivity.on('featureHover', updatePopup);
-          }
 
           function updatePopup(event) {
           if (event.features.length > 0) {
