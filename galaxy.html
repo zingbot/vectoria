@@ -22,12 +22,12 @@
           var map = new mapboxgl.Map({
               container: 'map',
               style: base_style,
-              zoom: 2,
+              zoom: 4,
               center: [0,0]
                   });
 const popup = new mapboxgl.Popup({
-      closeButton: true,
-      closeOnClick: false
+      closeButton: false,
+      closeOnClick: true
     });
 					carto.setDefaultAuth({
 						user: 'jferzoco',
@@ -83,7 +83,8 @@ const popup = new mapboxgl.Popup({
             <div class="popup-container">
             <h2>${vars.name.value}</h2>
             <ul>
-            <h3><a href="${vars.link.value}" target="_blank">Link</a></h3>
+            <h3><a href="${vars.link.value}" target="_blank">Wikia</a></h3>
+            <h4>
             </ul>
             </div>
             `);

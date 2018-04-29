@@ -9,35 +9,48 @@
           height: 100%;
           background:#000;}
 
+.mapboxgl-popup-content{
+      width:23px;
+      height: 68px;
+      border-radius: 10px;
+      background: none;
+      border: .2px solid #FFFFFF;
+      opacity: 1;
+      border-right: 0px;
+    }
     .popup-container {
-      position: absolute;
-      margin:6px;
       width:140px;
       color: #FFFFFF;
       background: #000000;
-      border: .52px solid #FFFFFF;
-      height: 188px;
-      line-height: 28px;
-      border-radius: 10px;
-      padding: 10px;
+      border-width:2px;
+      border-style:solid;
+      border-color:#fff;
+      height: 68px;
+      border-radius:0px 90px 90px 0px;
+      -moz-border-radius:0px 90px 90px 0px;
+      -webkit-border-radius:0px 90px 90px 0px;
+      border-right: 0px;
+      padding: 0px 0px 10px 10px;
     }
     .popup-container li {
       list-style-type: none;
       margin-bottom: 8px;
     }
     .popup-container li:last-child {
-      margin-bottom: 0;
+      margin-bottom: 10px;
     }
-    .popup-container h2 {
+    .popup-container h2 a{
       font: 600 16px/22px 'Montserrat';
-      margin-bottom: 3px
+      margin-bottom: 13px
     }
-    .popup-container h3{
+    .popup-container h3 a {
       font: 400 10px/14px 'Montserrat';
-      color: #747D82;
+      color: #bababa;
       text-transform: uppercase;
+
     }
     .popup-container h4{
       font: 600 12px/16px 'Montserrat';
     }
+
         }
