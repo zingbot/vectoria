@@ -9,9 +9,14 @@
           height: 100%;
           background:#000;}
 
+ .mapboxgl-popup-tip{
+      background:black; 
+      border:10px;
+      }
+
 .mapboxgl-popup-content{
       width:23px;
-      height: 68px;
+      height: 48px;
       border-radius: 10px;
       background: none;
       border: .2px solid #FFFFFF;
@@ -23,14 +28,12 @@
       color: #FFFFFF;
       background: #000000;
       border-width:2px;
-      border-style:solid;
+      border-style:dashed;
       border-color:#fff;
-      height: 68px;
-      border-radius:0px 90px 90px 0px;
-      -moz-border-radius:0px 90px 90px 0px;
-      -webkit-border-radius:0px 90px 90px 0px;
-      border-right: 0px;
-      padding: 0px 0px 10px 10px;
+      height: 50px;
+      border-radius:10px;
+      padding: 3px 5px 3px 10px;
+      line-height: 0px;
     }
     .popup-container li {
       list-style-type: none;

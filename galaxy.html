@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width" />
     <title>Star Wars Galaxy</title>
       <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
-      <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.js"></script>
-      <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+      <script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
+     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
+     <!--  <script src="https://cartodb-libs.global.ssl.fastly.net/carto.js/v4.0.0/carto.min.js"></script> -->
       <link href="css/galaxy.css" rel="stylesheet" />
 
       <style type="text/css" media="screen">
@@ -16,7 +17,8 @@
   <body>
     <div id='map' />
       <script charset="utf-8">
-          mapboxgl.accessToken = 'pk.eyJ1IjoiemluZ2JvdCIsImEiOiJJU1NqTEdrIn0.hzY0M7fDqT5nMAgCffDCbg';
+          
+    var access = mapboxgl.accessToken = 'pk.eyJ1IjoiemluZ2JvdCIsImEiOiJJU1NqTEdrIn0.hzY0M7fDqT5nMAgCffDCbg';
           var base_style = 'mapbox://styles/zingbot/cjgjib3zw00002ro2874yyugd';
 
           var map = new mapboxgl.Map({
@@ -25,16 +27,21 @@
               zoom: 4,
               center: [0,0]
                   });
-const popup = new mapboxgl.Popup({
-      closeButton: false,
-      closeOnClick: true
-    });
+
+          // var client = new carto.Client({
+          //     username: 'jferzoco',
+          //     apiKey: 'default_public'
+          //     });
+    
+          const popup = new mapboxgl.Popup({
+              closeButton: false,
+              closeOnClick: true
+          });
+
 					carto.setDefaultAuth({
-						user: 'jferzoco',
-						apiKey: 'default_public'
+						  user: 'jferzoco',
+						  apiKey: 'default_public'
 					});
-
-
 
 
 					const planets= new carto.source.Dataset(`
@@ -42,21 +49,20 @@ const popup = new mapboxgl.Popup({
               `);
 
 					const planetsViz = new carto.Viz(`
-            width:zoom()
-						color: ramp($region, PRISM),
-            strokeWidth: .25
-            @name: $name
-            @link: $link
-					`);
+              width:zoom()
+						  color: ramp($region, PRISM),
+              strokeWidth: .25
+
+              @name: $name
+              @link: $link
+					   `);
 
           const lines = new carto.source.Dataset(`
                 hyperspace`)
 
-          const lineViz = new carto.Viz ('width:2  strokeColor:opacity(ramp($zoom_level,Prism), 1)'
+          const lineViz = new carto.Viz ('width:zoom()  strokeColor:opacity(ramp($zoom_level,Prism), 1)'
              );
-
-         
-
+       
           const sectors = new carto.source.Dataset(`
                 sector`)
 
@@ -68,10 +74,38 @@ const popup = new mapboxgl.Popup({
 
           const regionViz = new carto.Viz ('width:2  color:opacity(ramp($region, PRISM), .15)'
              );
-					const layerPlanets = new carto.Layer('planets', planets, planetsViz);
+
+          // const planetLabelsSource = new carto.source.SQL('select * from planets');
+
+          // const planetLabelsStyle = new carto.style.CartoCSS('    #layer{ text-name: [name]; text-face-name: \'Lato Regular\';     text-size: 11;[zm = 1]{#planets[zoom < 4]{text-size: 0;}            }            [zm = 2]{                #planets[zoom < 5]{text-size: 0;}            }            [zm = 3]{                #planets[zoom < 6]{text-size: 0;}            }          [zm = 4]{               #planets[zoom < 8]{text-size: 0;}            }        text-label-position-tolerance: 12        text-fill: #000000;text-halo-fill: #FFFFFF;        text-halo-radius: 0.0;        text-dy: -8;        text-allow-overlap: false;        text-placement: point;        text-placement-type: simple;}')
+
+          // map.on('load', function() {
+          // // Add a new source from our GeoJSON data and set the
+          // // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+    
+          // const planetLabelsSource = map.addSource("planetLabels", {
+          // type: "geojson",
+          // data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from planets"
+          // });
+
+          // const planetLabelsStyle = map.addLayer({
+          // id: "planetLabels",
+          // type: "circle",
+          // source: "planetLabels",
+          //  "layout": {"text-field": "{name}",
+          //   "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+          //   "text-size": 12
+          //   }
+          //   });
+          // });
+
+					
+           // const planetLabels = new carto.Layer('planetLabels', planetLabelsSource, planetLabelsStyle);
+          const layerPlanets = new carto.Layer('planets', planets, planetsViz);
 					const layerLines = new carto.Layer('lines', lines, lineViz);
           const layerSectors = new carto.Layer('sectors', sectors, sectorViz);
           const layerRegions = new carto.Layer('regions', regions, regionViz);
+
 
           const interactivity = new carto.Interactivity([layerPlanets]);
           interactivity.on('featureClick', updatePopup);
@@ -84,7 +118,6 @@ const popup = new mapboxgl.Popup({
             <h2>${vars.name.value}</h2>
             <ul>
             <h3><a href="${vars.link.value}" target="_blank">Wikia</a></h3>
-            <h4>
             </ul>
             </div>
             `);
@@ -96,6 +129,7 @@ const popup = new mapboxgl.Popup({
             popup.remove();
               }
               }
+
 
           layerLines.addTo(map);
 					layerPlanets.addTo(map, 'lines');

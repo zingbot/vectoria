@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
-  <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.js"></script>
-  <script src="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css"></script>
+<script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
+  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
   <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
   <style>
     * {
@@ -114,7 +114,6 @@
       
 color: opacity(ramp(linear($qpf,0.01,10),Teal),.5)
 strokeColor: rgba(0,0,0,1)
-strokeWidth: $qpf
 filter: torque(linear($issue_time,time('2017-08-23T20:16:23Z'),time('2017-08-31T20:23:27Z')),30,fade(4))
     `);
 
