@@ -79,28 +79,32 @@
 
           // const planetLabelsStyle = new carto.style.CartoCSS('    #layer{ text-name: [name]; text-face-name: \'Lato Regular\';     text-size: 11;[zm = 1]{#planets[zoom < 4]{text-size: 0;}            }            [zm = 2]{                #planets[zoom < 5]{text-size: 0;}            }            [zm = 3]{                #planets[zoom < 6]{text-size: 0;}            }          [zm = 4]{               #planets[zoom < 8]{text-size: 0;}            }        text-label-position-tolerance: 12        text-fill: #000000;text-halo-fill: #FFFFFF;        text-halo-radius: 0.0;        text-dy: -8;        text-allow-overlap: false;        text-placement: point;        text-placement-type: simple;}')
 
-          // map.on('load', function() {
-          // // Add a new source from our GeoJSON data and set the
-          // // 'cluster' option to true. GL-JS will add the point_count property to your source data.
+          // MaboxGL
+          map.on('load', function() {
+          // Add a new source from our GeoJSON data and set the
+          // 'cluster' option to true. GL-JS will add the point_count property to your source data.
     
-          // const planetLabelsSource = map.addSource("planetLabels", {
-          // type: "geojson",
-          // data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from planets"
-          // });
+          const planetLabelsSource = map.addSource("planetLabels", {
+          type: "geojson",
+          data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from planets"
+          });
 
-          // const planetLabelsStyle = map.addLayer({
-          // id: "planetLabels",
-          // type: "circle",
-          // source: "planetLabels",
-          //  "layout": {"text-field": "{name}",
-          //   "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
-          //   "text-size": 12
-          //   }
-          //   });
-          // });
+          const planetLabelsStyle = map.addLayer({
+          id: "planetLabels",
+          type: "symbol",
+          source: "planetLabels",
+           "layout": {"text-field": "{name}",
+            "text-font": ["DIN Offc Pro Medium", "Arial Unicode MS Bold"],
+                "symbol-placement": "point",
+                "text-size": 12
+            },
+
+            "paint": {'text-color': '#fff'}
+            });
+          });
 
 					
-           // const planetLabels = new carto.Layer('planetLabels', planetLabelsSource, planetLabelsStyle);
+           //const planetLabels = new carto.Layer('planetLabels', planetLabelsSource, planetLabelsStyle);
           const layerPlanets = new carto.Layer('planets', planets, planetsViz);
 					const layerLines = new carto.Layer('lines', lines, lineViz);
           const layerSectors = new carto.Layer('sectors', sectors, sectorViz);
