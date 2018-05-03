@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -38,29 +39,29 @@
               closeOnClick: true
           });
 
-					carto.setDefaultAuth({
-						  user: 'jferzoco',
-						  apiKey: 'default_public'
-					});
+          carto.setDefaultAuth({
+              user: 'jferzoco',
+              apiKey: 'default_public'
+          });
 
 
-					const planets= new carto.source.Dataset(`
-              planets					
+          const planets= new carto.source.Dataset(`
+              planets         
               `);
 
-					const planetsViz = new carto.Viz(`
+          const planetsViz = new carto.Viz(`
               width:zoom()
-						  color: ramp($region, PRISM),
+              color: ramp($region, PRISM),
               strokeWidth: .25
 
               @name: $name
               @link: $link
-					   `);
+             `);
 
           const lines = new carto.source.Dataset(`
                 hyperspace`)
 
-          const lineViz = new carto.Viz ('width:zoom()  strokeColor:opacity(ramp($zoom_level,Prism), 1)'
+          const lineViz = new carto.Viz ('width:1,  strokeColor:opacity(ramp($zoom_level,Prism), .2)'
              );
        
           const sectors = new carto.source.Dataset(`
@@ -103,10 +104,10 @@
             });
           });
 
-					
+          
            //const planetLabels = new carto.Layer('planetLabels', planetLabelsSource, planetLabelsStyle);
           const layerPlanets = new carto.Layer('planets', planets, planetsViz);
-					const layerLines = new carto.Layer('lines', lines, lineViz);
+          const layerLines = new carto.Layer('lines', lines, lineViz);
           const layerSectors = new carto.Layer('sectors', sectors, sectorViz);
           const layerRegions = new carto.Layer('regions', regions, regionViz);
 
@@ -134,11 +135,11 @@
               }
               }
 
-
-          layerLines.addTo(map);
-					layerPlanets.addTo(map, 'lines');
-          layerSectors.addTo(map);
           layerRegions.addTo(map);
+          layerSectors.addTo(map);
+          layerLines.addTo(map);
+          layerPlanets.addTo(map, 'planetLabels');
+
 
          //  interactivity.on('featureEnter',(a)=>{
          // console.log(a.features[0].variables)

@@ -141,7 +141,7 @@ const interactivity = new carto.Interactivity([layer]);
 
     interactivity.on('featureEnter', event => {
       if (event.features.length > 0) {
-        event.features[0].width.blendTo('40',10)
+        event.features[0].width.blendTo('$revenue/1000',10)
       }
     });
 
