@@ -111,13 +111,15 @@
     });
 
     const sourceContours = new carto.source.SQL(`
-      select * FROM countours LIMIT 1000
+      select * FROM 
+hctx_parcels_gdb
     `);
     
     const styleContours = new carto.Viz(`
-    color: #000
+    color: ramp($new_owner_, PRISM)
+    strokeWidth: 0
     @id: $objectid
-    @contour: $contour
+    @zip: $mail_zip
     `);
 
    
@@ -159,7 +161,7 @@ const interactivity = new carto.Interactivity([layer]);
             <h2>${vars.objectid.value}</h2>
             <ul>
             <h3>Revenue:</h3>
-            <h4>${vars.contour.value}</h4></ul>
+            <h4>${vars.zip.value}</h4></ul>
             </div>
             `);
           popup.setLngLat([event.coordinates.lng, event.coordinates.lat]);
