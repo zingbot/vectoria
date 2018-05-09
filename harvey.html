@@ -76,22 +76,15 @@
   <div id="map"></div>
   <div id="controls">
     <ul class="actions">
-      <li>
-        <input type="radio" name="style" onclick="setPopupsClick()" id="click">
-        <label for="click">Pop-ups on click</label>
-      </li>
-      <li>
-        <input type="radio" name="style" onclick="setPopupsHover()" id="hover">
-        <label for="hover">Pop-ups on hover</label>
-      </li>
+     August 23rd, 2017 to August 31st, 2017
     </ul>
   </div>
   <script>
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-      center: [-90.712891, 33.090240 ],
-      zoom: 4,
+      center: [-95.6814734, 29.8168824 ],
+      zoom: 5,
       dragRotate: false
     });
 
@@ -113,7 +106,7 @@
     const viz = new carto.Viz(`
       
 color: opacity(ramp(linear($qpf,0.01,10),Teal),.5)
-strokeColor: rgba(0,0,0,1)
+strokeColor: rgba(0,0,50,.25)
 filter: torque(linear($issue_time,time('2017-08-23T20:16:23Z'),time('2017-08-31T20:23:27Z')),30,fade(4))
     `);
 
