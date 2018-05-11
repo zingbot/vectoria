@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
-<script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
-  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
+ <script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
+ <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
   <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
   <style>
     * {
@@ -16,8 +16,12 @@
     }
     #map {
       position: absolute;
-      height: 100%;
+      height: 96%;
+      top:30px;
       width: 100%;
+    }
+    #mapTitle {
+      height: 30px;
     }
     #controls {
       position: absolute;
@@ -73,18 +77,24 @@
   </style>
 </head>
 <body>
+ <div id="mapTitle"> Title</div>
   <div id="map"></div>
   <div id="controls">
     <ul class="actions">
-     August 23rd, 2017 to August 31st, 2017
+      <li>
+      
+      </li>
+      <li>
+       
+      </li>
     </ul>
   </div>
   <script>
     const map = new mapboxgl.Map({
       container: 'map',
-      style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-      center: [-95.6814734, 29.8168824 ],
-      zoom: 5,
+      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      center: [-73.9846726,40.7233474],
+      zoom: 13.5,
       dragRotate: false
     });
 
@@ -95,28 +105,74 @@
 
     carto.setDefaultAuth({
       user: 'jferzoco',
-      apiKey: 'default_public'
+      apiKey: '6yfiYa3AUuRuBNANw0DjUw'
     });
 
-    const source = new carto.source.Dataset(`
-      harvey_rain_08_25_to_08_30
+    const sourceContours = new carto.source.SQL(`
+      select * FROM 
+geo_export_27ebe6e4_5b0a_44cb_a7de_ff26c6f5ac3a
+    `);
+    
+    const styleContours = new carto.Viz(`
+    color: ramp(linear($groundelev, 0,50), tealrose)
+   filter: torque($groundelev,30,fade(0.5,0.5))
+   strokeColor: white
+    strokeWidth: .25
+    @year: $cnstrct_yr
+    @bin: $bin
     `);
 
-
-    const viz = new carto.Viz(`
-      
-color: opacity(ramp(linear($qpf,0.01,10),Teal),.5)
-strokeColor: rgba(0,0,50,.25)
-filter: torque(linear($issue_time,time('2017-08-23T20:16:23Z'),time('2017-08-31T20:23:27Z')),20,fade(4))
-    `);
-
+   
     // const layer = new carto.layer.Layer(source, viz, {
     //     featureOverColumns: ['commonname', 'location_3_city', 'cenblock']
     //   });
 
-    const layer = new carto.Layer('layer', source, viz);
+    const layer = new carto.Layer('layer', sourceContours, styleContours);
 
-   
+    // const interactivity = new carto.Interactivity([layer]);
+    // layer.on('loaded', () => {
+    //   enableControls();
+    // });
+
+const interactivity = new carto.Interactivity([layer]);
+
+    interactivity.on('featureEnter', event => {
+      if (event.features.length > 0) {
+        event.features[0].width.blendTo('$revenue/1000',10)
+      }
+    });
+
+    interactivity.on('featureLeave', event => {
+      if (event.features.length > 0) {
+        event.features[0].width.reset(10);
+      }
+    });
+
+
+
+
+          interactivity.on('featureClick', updatePopup);
+
+          function updatePopup(event) {
+          if (event.features.length > 0) {
+          const vars = event.features[0].variables;
+          popup.setHTML(`
+            <div class="popup-container">
+            <h2>${vars.objectid.value}</h2>
+            <ul>
+            <h3>Revenue:</h3>
+            <h4>${vars.zip.value}</h4></ul>
+            </div>
+            `);
+          popup.setLngLat([event.coordinates.lng, event.coordinates.lat]);
+            if (!popup.isOpen()) {
+            popup.addTo(map);
+             }
+              } else {
+            popup.remove();
+              }
+              }
+
         layer.addTo(map, 'watername_ocean');
 
   </script>
