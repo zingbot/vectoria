@@ -70,13 +70,25 @@
     .popup-container h4{
       font: 600 12px/16px 'Open Sans';
     }
+     #timestamp {
+      position: absolute;
+      top: 10px;
+      left: 40px;
+      height: 10px;
+      color: #aaa;
+      font-size: 18px;
+      font-family: 'Montserrat';
+    }
+
   </style>
 </head>
 <body>
   <div id="map"></div>
+    
+
   <div id="controls">
     <ul class="actions">
-     August 23rd, 2017 to August 31st, 2017
+     <div id="timestamp"></div>
     </ul>
   </div>
   <script>
@@ -102,13 +114,15 @@
       harvey_rain_08_25_to_08_30
     `);
 
+const s = carto.expressions;
 
-    const viz = new carto.Viz(`
-      
-color: opacity(ramp(linear($qpf,0.01,10),Teal),.5)
-strokeColor: rgba(0,0,50,.25)
-filter: torque(linear($issue_time,time('2017-08-23T20:16:23Z'),time('2017-08-31T20:23:27Z')),20,fade(4))
-    `);
+const torqueExpr = s.torque(s.prop('issue_time'), 30, s.fade(5, 5))
+ 
+
+    const viz = new carto.Viz({
+color: s.opacity(s.ramp(s.linear(s.prop('qpf'),0.01,10), s.palettes.TEAL),.5),
+strokeColor: s.rgba(0,0,50,.25),
+filter: torqueExpr});
 
     // const layer = new carto.layer.Layer(source, viz, {
     //     featureOverColumns: ['commonname', 'location_3_city', 'cenblock']
@@ -118,7 +132,10 @@ filter: torque(linear($issue_time,time('2017-08-23T20:16:23Z'),time('2017-08-31T
 
    
         layer.addTo(map, 'watername_ocean');
-
+      layer.on('updated', ()=>{
+      let currTime = Math.floor(torqueExpr.getSimTime());
+      document.getElementById('timestamp').innerHTML = currTime;
+    })
   </script>
 </body>
 </html>
