@@ -134,7 +134,7 @@ filter: torqueExpr});
         layer.addTo(map, 'watername_ocean');
       layer.on('updated', ()=>{
       let currTime = Math.floor(torqueExpr.getSimTime());
-      document.getElementById('timestamp').innerHTML = currTime;
+      document.getElementById('timestamp').innerHTML = new Date(currTime);
     })
   </script>
 </body>
