@@ -21,10 +21,10 @@
     }
     #controls {
       position: absolute;
-      padding: 60px;
+      padding: 15px;
       background: white;
       top: 12px;
-      right: 12px;
+      left: 10px;
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
       border-radius: 4px;
       width: 200px;
@@ -75,7 +75,7 @@
       top: 10px;
       left: 40px;
       height: 10px;
-      color: #aaa;
+      color: #3c3c3c;
       font-size: 18px;
       font-family: 'Montserrat';
     }
@@ -136,7 +136,8 @@ filter: torqueExpr});
         layer.addTo(map, 'watername_ocean');
       layer.on('updated', ()=>{
       let currTime = Math.floor(torqueExpr.getSimTime());
-      document.getElementById('timestamp').innerHTML = new Date(currTime);
+      document.getElementById('timestamp').innerHTML = new Date(currTime).toDateString();
+
     })
   </script>
 </body>
