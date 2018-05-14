@@ -21,7 +21,7 @@
     }
     #controls {
       position: absolute;
-      padding: 20px;
+      padding: 60px;
       background: white;
       top: 12px;
       right: 12px;
@@ -88,8 +88,10 @@
 
   <div id="controls">
     <ul class="actions">
-     <div id="timestamp"></div>
+      <li><div></div></li>
+      <li><div id="timestamp"></div></li>
     </ul>
+
   </div>
   <script>
     const map = new mapboxgl.Map({
@@ -116,7 +118,7 @@
 
 const s = carto.expressions;
 
-const torqueExpr = s.torque(s.prop('issue_time'), 30, s.fade(5, 5))
+const torqueExpr = s.torque(s.prop('issue_time'), 60, s.fade(5, 5))
  
 
     const viz = new carto.Viz({
