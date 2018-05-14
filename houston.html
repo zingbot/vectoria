@@ -94,9 +94,9 @@
   <script>
     const map = new mapboxgl.Map({
       container: 'map',
-      style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
       center: [-95.3595615, 29.7496247],
-      zoom: 13,
+      zoom: 16,
       dragRotate: false
     });
 
@@ -110,16 +110,36 @@
       apiKey: 'qqPeOwfg4lKxvU341dyCUQ'
     });
 
-    const sourceContours = new carto.source.SQL(`
+    const sourceParcels = new carto.source.SQL(`
       select * FROM 
 hctx_parcels_gdb
     `);
     
-    const styleContours = new carto.Viz(`
-    color: ramp($new_owner_, PRISM)
-    strokeWidth: 0
+    const styleParcels = new carto.Viz(`
+    color: opacity(ramp($new_owner_, PRISM),0.5)
+    strokeWidth: .25
     @id: $objectid
     @zip: $mail_zip
+    `);
+    const sourceContours = new carto.source.SQL(`
+      select * FROM 
+countours
+    `);
+    
+    const styleContours = new carto.Viz(`
+    color: white
+    strokeWidth: zoom()/10
+    filter: torque($contour,4,fade(0.15,0.15))
+   
+    `);
+    const sourceContoursBase = new carto.source.SQL(`
+      select * FROM countours
+    `);
+    
+    const styleContoursBase = new carto.Viz(`
+    color: #252525
+    strokeWidth: zoom()/10
+   
     `);
 
    
@@ -128,6 +148,8 @@ hctx_parcels_gdb
     //   });
 
     const layer = new carto.Layer('layer', sourceContours, styleContours);
+    const layerParcels = new carto.Layer('layerParcel', sourceParcels, styleParcels);
+        const layerContourBase = new carto.Layer('layerContourBase', sourceContoursBase, styleContoursBase);
 
     // const interactivity = new carto.Interactivity([layer]);
     // layer.on('loaded', () => {
@@ -173,7 +195,11 @@ const interactivity = new carto.Interactivity([layer]);
               }
               }
 
-        layer.addTo(map, 'watername_ocean');
+        layerParcels.addTo(map);
+        layerContourBase.addTo(map);
+        layer.addTo(map, 'layerContourBase');
+
+
 
   </script>
 </body>
