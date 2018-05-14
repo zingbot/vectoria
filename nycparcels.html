@@ -80,7 +80,7 @@
     #legend_circle {
       width: 10px;
       height: 10px;
-      background: gray;
+      background: orange;
       -moz-border-radius: 50px;
       -webkit-border-radius: 50px;
       border-radius: 50px;
@@ -97,7 +97,7 @@
   <div id="map"></div>
   <div id="controls">
     <ul class="actions">
-      <li id="legend_circle"> <p>Number of Violations </p>
+      <li id="legend_circle"> <p>Violations </p>
       </li>
       <li id="legend_building">
       </li>
@@ -112,8 +112,8 @@
       style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
       center: [-73.9891437,40.7358272],
       zoom: 16,
-      maxzoom:22,
-      minzoom: 12,
+      maxzoom: 20,
+      minzoom: 2,
       dragRotate: false
     });
 
@@ -160,14 +160,14 @@ geo_export_27ebe6e4_5b0a_44cb_a7de_ff26c6f5ac3a
     `);
    
    const styleViolationsMarkers = new carto.Viz(`
-    
     strokeColor: opacity(white, .5)
-    color: opacity(orange, 1)
-    strokeWidth: zoom() * ($value/100000)
-    width: 1
+    color: opacity(orange, .5)
+    strokeWidth:  1
+    width: clusterSum($value)/3
     @value:$value
     `);
 
+//zoom() * ($value/100000)
     map.on('load', function() {
           // Add a new source from our GeoJSON data and set the
           // 'cluster' option to true. GL-JS will add the point_count property to your source data.
@@ -188,11 +188,11 @@ geo_export_27ebe6e4_5b0a_44cb_a7de_ff26c6f5ac3a
                                       ["exponential", 1.75],
                                       ["zoom"],
                                         14, 0,
-                                        16,10,
-                                        20, 20],
+                                        16,0,
+                                        18,19,
+                                        20,24],
                       "text-offset": [0,0]
                     },
-          minzoom: 14,
           paint: {'text-color': '#fff'}
                   });
                 });
@@ -252,7 +252,7 @@ const interactivity = new carto.Interactivity([layerViolations]);
 
         //layerBuildings.addTo(map);
 
-        layerViolations.addTo(map);
+        //layerViolations.addTo(map);
         layerViolationsMarkers.addTo(map);
 
 
