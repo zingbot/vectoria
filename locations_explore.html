@@ -78,7 +78,8 @@
   </style>
 </head>
 <body>
- <div id="mapTitle"> Title</div>
+ <div id="mapTitle">  Foot Traffic: How to approach aggegation and cartography in CARTOVL
+</div>
   <div id="map"></div>
   <!-- <div id="controls"> -->
    <!--  <ul class="actions">
@@ -142,7 +143,32 @@
 map.on('load', function() {
           // Add a new source from our GeoJSON data and set the
           // 'cluster' option to true. GL-JS will add the point_count property to your source data.
-    
+     
+          const catLabels = map.addSource("catLabels", {
+          type: "geojson",
+          data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from locations_explore_sheet"
+          });
+
+          const catLabelsStyle = map.addLayer({
+          id: "catLabels",
+          type: "symbol",
+          source: "catLabels",
+          layout: {"text-field": "{top_category}",
+                      "text-font": ["Open Sans Regular, Arial Unicode MS Regular"],
+                      "symbol-placement": "point",
+                      "text-size": [ "interpolate",
+                                      ["exponential", 2],
+                                      ["zoom"],
+                                        14, 0,
+                                        16,0,
+                                        18,19,
+                                        20,24],
+                      "text-offset": [-2,-2]
+                    },
+          paint: {'text-color': '#fff'}
+                  });
+            
+
           const pointLabels = map.addSource("pointLabels", {
           type: "geojson",
           data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from locations_explore_sheet"
