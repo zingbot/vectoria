@@ -131,7 +131,7 @@
     @cat: $top_category
     `);
     const vizLarge = new carto.Viz(`
-    width: zoom() 
+    width: $visits_per_visitor*5  
     color: ramp($top_category, PRISM)
     strokeColor: opacity(white, .5)
     strokeWidth: $total_visits
