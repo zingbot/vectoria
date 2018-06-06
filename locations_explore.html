@@ -131,7 +131,7 @@
     @cat: $top_category
     `);
     const vizLarge = new carto.Viz(`
-    width: $visits_per_visitor*5  
+    width: zoom() 
     color: ramp($top_category, PRISM)
     strokeColor: opacity(white, .5)
     strokeWidth: $total_visits
@@ -153,17 +153,22 @@ map.on('load', function() {
           id: "catLabels",
           type: "symbol",
           source: "catLabels",
-          layout: {"text-field": "{top_category}",
-                      "text-font": ["Open Sans Regular, Arial Unicode MS Regular"],
+          layout: {"text-field": "{location_name}",
+                      "text-max-width": 5,
+                      "text-font": ["Open Sans Bold, Arial Unicode MS Regular"],
                       "symbol-placement": "point",
                       "text-size": [ "interpolate",
                                       ["exponential", 2],
                                       ["zoom"],
                                         14, 0,
-                                        16,0,
+                                        16,10,
                                         18,19,
                                         20,24],
-                      "text-offset": [-2,-2]
+                      "text-offset": [-4,-2],
+                       "text-allow-overlap":true,
+                      "text-justify": "right",
+                      "text-ignore-placement":true,
+                      "text-transform":"uppercase"
                     },
           paint: {'text-color': '#fff'}
                   });
@@ -178,8 +183,8 @@ map.on('load', function() {
           id: "pointLabels",
           type: "symbol",
           source: "pointLabels",
-          layout: {"text-field": "{total_visits}",
-                      "text-font": ["Open Sans Regular, Arial Unicode MS Regular"],
+          layout: {"text-field": "{total_visits} visitor(s)",
+                      "text-font": ["Open Sans Bold, Arial Unicode MS Regular"],
                       "symbol-placement": "point",
                       "text-size": [ "interpolate",
                                       ["exponential", 2],
@@ -188,7 +193,9 @@ map.on('load', function() {
                                         16,10,
                                         18,19,
                                         20,24],
-                      "text-offset": [1,1]
+                      "text-offset": [4,1],
+                      "text-allow-overlap":false,
+                      "text-justify": "left"
                     },
           paint: {'text-color': '#fff'}
                   });
@@ -198,8 +205,8 @@ map.on('load', function() {
     const layer = new carto.Layer('layer', source, viz);
     const layerLarge = new carto.Layer('baselayer',sourceLarge, vizLarge);
 
-const interactivity = new carto.Interactivity([layerLarge]);
-const mapboxGLCanvas = document.querySelector('.mapboxgl-canvas');
+    const interactivity = new carto.Interactivity([layerLarge]);
+    const mapboxGLCanvas = document.querySelector('.mapboxgl-canvas');
     
     interactivity.on('featureEnter', featureEvent => {
       mapboxGLCanvas.style.cursor = 'pointer';
