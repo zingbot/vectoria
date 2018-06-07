@@ -16,6 +16,8 @@
       padding: 0;
       box-sizing: border-box;
     }
+
+
     #map {
       position: absolute;
       height: 100%;
@@ -58,8 +60,56 @@
       cursor: pointer;
     }
     #controls li:last-child {
-      margin-bottom: 0;
+      margin-bottom: 30;
     }
+#legend{
+  width: auto;
+  align-content: center;
+    }
+   #outer-circle {
+   background: #5F4690;
+   border-radius: 50%;
+   height: 50px;
+   width: 50px;
+   position: relative;
+   opacity: .6;
+   /* 
+    Child elements with absolute positioning will be 
+    positioned relative to this div 
+    #5F4690,#1D6996,#38A6A5,#0F8554,#73AF48,#EDAD08,#E17C05,#CC503E,#94346E,#6F4070,#994E95,#666666
+   */
+    }
+ #outer-circle p{
+  width: 100px;
+  position: relative;
+   color: white;
+   font: 12px/8px 'Rubik';
+   font-weight: 200;
+   left: 60px;
+   margin-bottom: 10px;
+   align-items: top;
+    } 
+
+  #inner-circle {
+   position: absolute;
+   background: white;
+   border-radius: 50%;
+   height: 30px;
+   width: 30px;
+   opacity: .5;
+   /*
+    Put top edge and left edge in the center
+   */
+   top: 50%;
+   left: 50%;
+   margin: -15px 0px 0px -15px;
+   /* 
+    Offset the position correctly with
+    minus half of the width and minus half of the height 
+   */
+ }
+
+
     .popup-container {
       padding: 12px;
       width: 180px;
@@ -87,7 +137,6 @@
 </head>
 <body>
  <div id="mapTitle">  <strong>Let's style foot traffic counts!</strong><br> by FleurHoevenRockwood
-
 </div>
   <div id="map"></div>
   <div id="controls">
@@ -97,19 +146,14 @@
           > Larger dots are clusters from the area, colored by the top category(ish).<br>
           > Zoom in to see individual businesses.<br>
           </p>
-          <div style="height: 100px;
-  background: red;
-  -moz-border-radius: 50px;
-  -webkit-border-radius: 50px;
-  border-radius: 50px;"></div>
-        <!-- <input type="radio" name="style" onclick="setPopupsClick()" id="click">
-        <label for="click">Pop-ups on click</label>
-      </li>
-      <li>
-        <input type="radio" name="style" onclick="setPopupsHover()" id="hover">
-        <label for="hover">Pop-ups on hover</label> -->
       </li>
     </ul>
+  <div id="legend"> <div id="outer-circle"><p><strong>Outer Ring</strong></p>
+   <p>Total Visitors</p><p><strong>Inner Ring</strong></p><p> Unique Visitors</p>
+  <div id="inner-circle"> <p></p>
+  </div>
+</div><</div>
+
   </div>
   <script>
     const map = new mapboxgl.Map({
@@ -141,16 +185,17 @@
       locations_explore_sheet
     `);
 
-    const viz = new carto.Viz(`
-    width: 5 
-    color: ramp($top_category, PRISM)
-    strokeColor: opacity(white, .5)
-    strokeWidth: $total_visits
-    filter: torque($date, 30, fade(1,10))
-    @name: $location_name
-    @count: $total_visits
-    @cat: $top_category
-    `);
+    // const viz = new carto.Viz(`
+    // width: 5 
+    // color: ramp($top_category, PRISM)
+    // strokeColor: opacity(white, .5)
+    // strokeWidth: $total_visits
+    // filter: torque($date, 30, fade(1,10))
+    // @name: $location_name
+    // @count: $total_visits
+    // @cat: $top_category
+    // `);
+
     const vizLarge = new carto.Viz(`
     width: blend(1,$unique_visitors*10, linear(zoom(),2^10,2^13)) 
     color: opacity(ramp($top_category, PRISM),.9)
@@ -166,6 +211,7 @@
     color: opacity(white,1)
     strokeWidth:blend(clusterSum(($total_visits)), 0, linear(zoom(),2^10,2^14))
     strokeColor: opacity(ramp($top_category, PRISM), .5)`)
+
 
     map.on('load', function() {
           // Add a new source from our GeoJSON data and set the
@@ -229,7 +275,7 @@
                 });
 
 
-    const layer = new carto.Layer('layer', source, viz);
+    //const layer = new carto.Layer('layer', source, viz);
     const layerLarge = new carto.Layer('baselayer',sourceLarge, vizLarge);
     const layerCluster = new carto.Layer('clusterlayer',sourceCluster, vizCluster);
 
@@ -246,7 +292,6 @@
     interactivity.on('featureEnter', event => {
       if (event.features.length > 0) {
         event.features[0].width.blendTo('$total_visits*10',100)
-
       }
     });
 
