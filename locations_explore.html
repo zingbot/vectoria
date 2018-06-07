@@ -30,7 +30,8 @@
       padding-top:10px;
       height: 100px;
       background-color: black;
-      color: white;text-align: center;
+      color: white;
+      text-align: center;
     }
     #controls {
       position: absolute;
@@ -41,6 +42,7 @@
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
       border-radius: 4px;
       width: 200px;
+      height:100%;
       color: #2E3C43;
       pointer-events: none;
     }
@@ -56,23 +58,27 @@
       margin: 0 8px 0 0;
     }
     #controls li label {
-     
       cursor: pointer;
+    }
+    #controls hr {
+      margin:10px;
     }
     #controls li:last-child {
       margin-bottom: 30;
     }
-#legend{
-  width: auto;
-  align-content: center;
+
+    #legend-wrapper{
+      opacity: 1;
+      margin-top: 40px;
     }
+
    #outer-circle {
-   background: #5F4690;
-   border-radius: 50%;
-   height: 50px;
-   width: 50px;
-   position: relative;
-   opacity: .6;
+    background: #5F4690;
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    position: relative;
+    opacity: 1;
    /* 
     Child elements with absolute positioning will be 
     positioned relative to this div 
@@ -83,11 +89,12 @@
   width: 100px;
   position: relative;
    color: white;
-   font: 12px/8px 'Rubik';
+   font: 12px/12px 'Rubik';
    font-weight: 200;
    left: 60px;
    margin-bottom: 10px;
    align-items: top;
+
     } 
 
   #inner-circle {
@@ -108,12 +115,25 @@
     minus half of the width and minus half of the height 
    */
  }
+ #legend-circle{
+ background: #5F4690;
+   border-radius: 50%;
+   height: 50px;
+   width: 50px;
+   position: relative;
+   opacity: .6;}
 
-
+   #legend-circle p{
+ font: 800 12px/28x 'Rubik';
+ font-weight: 400;
+  color: white: 
+    }
+    
     .popup-container {
       padding: 12px;
       width: 180px;
     }
+ 
     .popup-container li {
       list-style-type: none;
       margin-bottom: 8px;
@@ -136,25 +156,34 @@
   </style>
 </head>
 <body>
- <div id="mapTitle">  <strong>Let's style foot traffic counts!</strong><br> by FleurHoevenRockwood
+ <div id="mapTitle">  <strong>Let's style Visitors!</strong><br> by FleurHoevenRockwood
 </div>
   <div id="map"></div>
   <div id="controls">
     <ul class="actions">
       <li>
-        <p> > This is a map of aggregated visits to businesses in nyc. 
-          > Larger dots are clusters from the area, colored by the top category(ish).<br>
-          > Zoom in to see individual businesses.<br>
-          </p>
+        <li> This is a map of aggregated visits to businesses in nyc. </li><li>Colored by category.</li>
+          <li> Zoom in to see individual businesses.</li>
+          
       </li>
     </ul>
-  <div id="legend"> <div id="outer-circle"><p><strong>Outer Ring</strong></p>
-   <p>Total Visitors</p><p><strong>Inner Ring</strong></p><p> Unique Visitors</p>
-  <div id="inner-circle"> <p></p>
-  </div>
-</div><</div>
-
-  </div>
+    <hr>
+    
+  
+      <div id="outer-circle"><p><strong>Outer Ring</strong></p>
+      <p>Total Visitors</p><p><strong>Inner Ring</strong></p><p> Unique Visitors</p>
+      <div id="inner-circle"> <p></p></div>
+      <div id="legend-wrapper">
+        <div id="legend-circle" style="background-color: #7F3C8D"><p>Grocery Stores</p></div>
+        <div id="legend-circle" style="background-color: #11A579"><p>Misc., Wholesalers and Durable Goods</p></div>
+        <div id="legend-circle" style="background-color: #3969AC"><p>Motion Picture and Video Industries</p></div>
+        <div id="legend-circle" style="background-color: #E73F74"><p>Stuff N' Things</p></div>
+        <div id="legend-circle" style="background-color: #E68310"><p>Automobile Dealers</p></div>
+        <div id="legend-circle"><p>Other</p></div><div id="legend-circle" style="background-color: #008695"><p>General Merchandise </p></div>
+        <div id="legend-circle" style="background-color: #CF1C90"><p>Department Stores</p></div>
+          
+        </div>
+      </div>
   <script>
     const map = new mapboxgl.Map({
       container: 'map',
