@@ -190,6 +190,8 @@
       style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
       center: [ -73.9398961,40.7213905],
       zoom: 10,
+      pitch: 0, // pitch in degrees
+    bearing: 0, // bearing in degree
       dragRotate: false
     });
 
@@ -238,7 +240,7 @@
     const vizCluster = new carto.Viz(`
     width: blend(clusterSum($unique_visitors), 0, linear(zoom(),2^10,2^13))
     color: opacity(white,1)
-    strokeWidth:blend(clusterSum(($total_visits)), 0, linear(zoom(),2^10,2^14))
+    strokeWidth:blend(clusterSum(($total_visits)), 0, linear(zoom(),2^10,2^13))
     strokeColor: opacity(ramp($top_category, PRISM), .5)`)
 
 
@@ -262,11 +264,11 @@
                       "text-size": [ "interpolate",
                                       ["exponential", 2],
                                       ["zoom"],
-                                        14, 0,
+                                        10, 0,
                                         16,10,
                                         18,19,
                                         20,24],
-                      "text-offset": [-4,-2],
+                      "text-offset": [-3,-2],
                        "text-allow-overlap":true,
                       "text-justify": "right",
                       "text-ignore-placement":true,
@@ -286,7 +288,7 @@
           type: "symbol",
           source: "pointLabels",
           layout: {"text-field": "{total_visits} visitor(s)",
-                      "text-font": ["Rubik, Arial Unicode MS Regular"],
+                      "text-font": ["Open Sans Bold, Arial Unicode MS Regular"],
                       "symbol-placement": "point",
                       "text-size": [ "interpolate",
                                       ["exponential", 2],
@@ -295,7 +297,7 @@
                                         16,10,
                                         18,19,
                                         20,24],
-                      "text-offset": [4,1],
+                      "text-offset": [2,1],
                       "text-allow-overlap":false,
                       "text-justify": "left"
                     },
