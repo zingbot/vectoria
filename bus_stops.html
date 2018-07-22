@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pop-ups | CARTO</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
+ <script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
+ <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
+  <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+   <link href="https://fonts.googleapis.com/css?family=Montserrat|Rubik|Rubik:bold|Rubik:medium|Rubik:light|Rubik:italic|Rubik:italic" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    #map {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+    #controls {
+      position: absolute;
+      padding: 15px;
+      background: white;
+      top: 12px;
+      left: 10px;
+      box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
+      border-radius: 4px;
+      width: 200px;
+      color: #2E3C43;
+      pointer-events: none;
+    }
+    #controls li {
+      list-style-type: none;
+      margin: 0 0 8px 0;
+      display: flex;
+      vertical-align: middle;
+    }
+    #controls li input {
+      margin: 0 8px 0 0;
+    }
+    #controls li label {
+      font: 12px/16px 'Open Sans';
+      cursor: pointer;
+    }
+    #controls li:last-child {
+      margin-bottom: 0;
+    }
+    .popup-container {
+      padding: 12px;
+      width: 180px;
+    }
+    .popup-container li {
+      list-style-type: none;
+      margin-bottom: 8px;
+    }
+    .popup-container li:last-child {
+      margin-bottom: 0;
+    }
+    .popup-container h2 {
+      font: 600 16px/22px 'Open Sans';
+      margin-bottom: 12px
+    }
+    .popup-container h3{
+      font: 400 10px/14px 'Open Sans';
+      color: #747D82;
+      text-transform: uppercase;
+    }
+    .popup-container h4{
+      font: 600 12px/16px 'Open Sans';
+    }
+     #timestamp {
+      position: absolute;
+      top: 10px;
+      left: 40px;
+      height: 10px;
+      color: #3c3c3c;
+      font-size: 18px;
+      font-family: 'Montserrat';
+    }
+
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+    
+
+  <div id="controls">
+    <ul class="actions">
+      <li><div></div></li>
+      <li><div id="timestamp"></div></li>
+    </ul>
+
+  </div>
+  <script>
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      center: [-73.979770, 40.726975],
+      zoom: 12,
+      dragRotate: false
+    });
+
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false
+    });
+
+    carto.setDefaultAuth({
+      user: 'jferzoco',
+      apiKey: 'default_public'
+    });
+
+    const sourceOn = new carto.source.Dataset(`fake_bus_data`);
+     const sourceOff = new carto.source.Dataset(`fake_bus_data`);
+
+    const s = carto.expressions;
+
+    // const torqueExpr = s.torque(s.prop('link_installation_a',s.time('2015-12-28T00:00:00Z'),s.time('2018-05-19T00:00:00Z')), 120, s.fade(1, 1000))
+ 
+    const vizOn = new carto.Viz({
+      color: s.opacity(s.rgb(255, 190, 255),0),
+      strokeColor: s.rgba(255,0,0,1),
+      //filter: torqueExpr,
+      width: s.prop('_on')
+    });
+
+     const vizOff = new carto.Viz({
+      color: s.opacity(s.rgb(20, 190, 255),0),
+      strokeColor: s.rgba(0,255,0,1),
+      //filter: torqueExpr,
+      width: s.prop('_off')
+    });
+
+
+map.on('load', function() {
+const onLabels = map.addSource("onLabels", {
+          type: "geojson",
+          data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from fake_bus_data"
+          });
+
+          const onLabelsStyle = map.addLayer({
+          id: "catLabels",
+          type: "symbol",
+          source: "onLabels",
+          layout: {"text-field": "{_on}",
+                      "text-max-width": 5,
+                      "text-font": ["Open Sans Bold, Arial Unicode MS Regular"],
+                      "symbol-placement": "point",
+                      "text-size": [ "interpolate",
+                                      ["exponential", 2],
+                                      ["zoom"],
+                                        10, 0,
+                                        16,10,
+                                        18,19,
+                                        20,24],
+                      "text-offset": [-2,-2],
+                       "text-allow-overlap":true,
+                      "text-justify": "right",
+                      "text-ignore-placement":true,
+                      "text-transform":"uppercase"
+                    },
+          paint: {'text-color': '#00ff00'}
+                  });
+
+const offLabels = map.addSource("offLabels", {
+          type: "geojson",
+          data: "https://jferzoco.carto.com/api/v2/sql?format=GeoJSON&q=select * from fake_bus_data"
+          });
+
+          const offLabelsStyle = map.addLayer({
+          id: "offLabels",
+          type: "symbol",
+          source: "offLabels",
+          layout: {"text-field": "{_off}",
+                      "text-max-width": 5,
+                      "text-font": ["Open Sans Bold, Arial Unicode MS Regular"],
+                      "symbol-placement": "point",
+                      "text-size": [ "interpolate",
+                                      ["exponential", 2],
+                                      ["zoom"],
+                                        10, 0,
+                                        16,10,
+                                        18,19,
+                                        20,24],
+                      "text-offset": [2,2],
+                       "text-allow-overlap":true,
+                      "text-justify": "right",
+                      "text-ignore-placement":true,
+                      "text-transform":"uppercase"
+                    },
+          paint: {'text-color': '#ff0000'}
+                  });
+          });
+
+ // const layer = new carto.layer.Layer(sourceOn, viz, {
+  //    featureOverColumns: ['name', '_on', '_off']
+  //   });
+
+    const layerOn = new carto.Layer('layerOn', sourceOn, vizOn);
+     const layerOff = new carto.Layer('layerOff', sourceOff, vizOff);
+
+    layerOn.addTo(map, 'watername_ocean');
+    layerOff.addTo(map);
+
+
+      //Time
+      // layer.on('updated', ()=>{
+      // let currTime = Math.floor(torqueExpr.getSimTime());
+      // document.getElementById('timestamp').innerHTML = new Date(currTime).toDateString();
+      // // })
+      // 
+   
+
+
+
+
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NFPA Hexbins trial</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="http://cartodb.com/assets/favicon.ico" />
+    
+    <style>
+      html, body, #map {
+        height: 100%;
+        padding: 0;
+        margin: 0;
+      }
+    </style>
+
+    <link rel="stylesheet" href="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/themes/css/cartodb.css" />
+  </head>
+  <body>
+    <div id="map"></div>
+
+   <!-- include cartodb.js library -->
+   <script src="https://cartodb-libs.global.ssl.fastly.net/cartodb.js/v3/3.15/cartodb.js"></script>
+
+
+    
+   <!-- Drop your code between the script tags below! -->
+   <script type="infowindow/html" id="infowindow_template">
+      <div class="cartodb-popup">
+        <a href="#close" class="cartodb-popup-close-button close">x</a>
+
+         <div class="cartodb-popup-content-wrapper">
+           <div class="cartodb-popup-content">
+             <!-- content.data contains the field info -->
+             <h4>Features Count</h4>
+             <p>{{content.data.points_count}}</p>
+             <h4>Prop Loss</h4>
+             <p>{{content.data.prop_loss}}</p>
+           </div>
+         </div>
+         <div class="cartodb-popup-tip-container"></div>
+      </div>
+    </script> 
+
+    <script type="sql/html" id="sql_template_a">
+      WITH 
+        hgrid AS (
+          SELECT 
+            CDB_HexagonGrid(
+              ST_Expand(
+                !bbox!, 
+                greatest(!pixel_width!,!pixel_height!) * 24
+              ), greatest(!pixel_width!,!pixel_height!) * 24
+            ) AS cell
+        )
+      SELECT 
+        hgrid.cell AS the_geom_webmercator, 
+        count(i.cartodb_id) AS points_count, 
+        row_number() over () AS cartodb_id, 
+        array_agg(cartodb_id) AS id_list, 
+        avg(prop_loss) AS average 
+      FROM 
+        hgrid, 
+        (select * from basic_fire_address_all LIMIT 10000) i 
+      WHERE 
+        ST_Intersects(
+          i.the_geom_webmercator, 
+          hgrid.cell
+        ) 
+      GROUP BY hgrid.cell 
+    </script>
+    <style type="text/cartocss" id="cartoCSS">
+    #layer{ 
+
+      line-width:1px;
+      line-color:#333;
+      line-opacity:0.5;	
+
+      [ prop_loss <= 500000] {   polygon-fill: #BD0026;}  
+      [ prop_loss <= 100000] {   polygon-fill: #F03B20;}  
+      [ prop_loss <= 50000] {   polygon-fill: #FD8D3C;}  
+      [ prop_loss <= 47653] {   polygon-fill: #FECC5C;}  
+      [ prop_loss <= 15601] {   polygon-fill: #FFFFB2;}  
+    }
+    </style>   
+
+    <style type="text/cartocss" id="cartoCSStest">
+    #layer {
+  marker-width: 7;
+  marker-fill: #EE4D5A;
+  marker-fill-opacity: 0.9;
+  marker-line-color: #FFFFFF;
+  marker-line-width: 1;
+  marker-line-opacity: 1;
+  marker-placement: point;
+  marker-type: ellipse;
+  marker-allow-overlap: true;
+}
+</style>
+
+    <script>
+    var map=L.map('map', {center: [40.2107483,-82.6305101],zoom:5});
+    function main(){
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}.png', {
+          attribution:'Stamen and CartoDB attribution'
+        }).addTo(map);
+
+    var clusterSQLtest = 'SELECT * FROM basic_fire_address_all '
+    var clusterSQL = $('#sql_template_a').html();
+    var cartoCSS = $('#cartoCSS').html();
+    
+    cartodb.createLayer(map, {
+      user_name:'jferzoco',
+      type:'cartodb',
+      sublayers:[{
+        sql: clusterSQLtest,
+        cartocss:cartoCSStest,
+      }]
+    },{https:true})
+    .on('done', function(layer){
+      cdb.vis.Vis.addInfowindow(map,layer.getSubLayer(0), ['points_count', 'prop_loss'],{infowindowTemplate: $('#infowindow_template').html()});
+    })
+    .addTo(map);
+    }
+    window.onload = main; 
+
+    </script>
+
+  </body>
+</html>
