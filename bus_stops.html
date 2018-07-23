@@ -198,9 +198,27 @@ const offLabels = map.addSource("offLabels", {
  // const layer = new carto.layer.Layer(sourceOn, viz, {
   //    featureOverColumns: ['name', '_on', '_off']
   //   });
+  //   
+   
 
-    const layerOn = new carto.Layer('layerOn', sourceOn, vizOn);
+     const layerOn = new carto.Layer('layerOn', sourceOn, vizOn);
      const layerOff = new carto.Layer('layerOff', sourceOff, vizOff);
+
+       const interactivity = new carto.Interactivity([layerOn]);
+    const mapboxGLCanvas = document.querySelector('.mapboxgl-canvas');
+
+ interactivity.on('featureEnter', event => {
+      if (event.features.length > 0) {
+        event.features[0].width.blendTo('$total',100)
+      }
+    });
+
+    interactivity.on('featureLeave', event => {
+      if (event.features.length > 0) {
+        event.features[0].width.reset(10);
+      }
+    });
+
 
     layerOn.addTo(map, 'watername_ocean');
     layerOff.addTo(map);
