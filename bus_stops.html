@@ -126,7 +126,7 @@
       color: s.opacity(s.rgb(255, 190, 255),0),
       strokeColor: s.rgba(255,0,0,1),
       //filter: torqueExpr,
-      width: s.var('onboardings'),
+      width: s.div(s.var('onboardings'),4),
       variables: {onboardings: s.prop('_on'), offboardings: s.prop('_off'),name: s.prop('name')}
     });
 
@@ -134,7 +134,7 @@
       color: s.opacity(s.rgb(20, 190, 255),0),
       strokeColor: s.rgba(0,255,0,1),
       //filter: torqueExpr,
-      width: s.var('offboardings'),
+      width: s.div(s.var('offboardings'),4),
         variables: {onboardings: s.prop('_on'), offboardings: s.prop('_off'),name: s.prop('name')}
     });
 
