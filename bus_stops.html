@@ -43,7 +43,7 @@
       margin: 0 8px 0 0;
     }
     #controls li label {
-      font: 12px/16px 'Open Sans';
+      font: 12px/16px 'Rubik';
       cursor: pointer;
     }
     #controls li:last-child {
@@ -51,7 +51,7 @@
     }
     .popup-container {
       padding: 12px;
-      width: 180px;
+      width: 100px;
     }
     .popup-container li {
       list-style-type: none;
@@ -61,16 +61,16 @@
       margin-bottom: 0;
     }
     .popup-container h2 {
-      font: 600 16px/22px 'Open Sans';
+      font: 600 16px/22px 'Rubik';
       margin-bottom: 12px
     }
     .popup-container h3{
-      font: 400 10px/14px 'Open Sans';
+      font: 400 10px/14px 'Rubik';
       color: #747D82;
       text-transform: uppercase;
     }
     .popup-container h4{
-      font: 600 12px/16px 'Open Sans';
+      font: 600 12px/16px 'Rubik';
     }
      #timestamp {
       position: absolute;
@@ -126,14 +126,16 @@
       color: s.opacity(s.rgb(255, 190, 255),0),
       strokeColor: s.rgba(255,0,0,1),
       //filter: torqueExpr,
-      width: s.prop('_on')
+      width: s.var('onboardings'),
+      variables: {onboardings: s.prop('_on'), offboardings: s.prop('_off'),name: s.prop('name')}
     });
 
      const vizOff = new carto.Viz({
       color: s.opacity(s.rgb(20, 190, 255),0),
       strokeColor: s.rgba(0,255,0,1),
       //filter: torqueExpr,
-      width: s.prop('_off')
+      width: s.var('offboardings'),
+        variables: {onboardings: s.prop('_on'), offboardings: s.prop('_off'),name: s.prop('name')}
     });
 
      const vizLine = new carto.Viz({
@@ -204,9 +206,7 @@ const offLabels = map.addSource("offLabels", {
                   });
           });
 
-map.on('click', function(e) {
-    console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
-});
+
 
  // const layer = new carto.layer.Layer(sourceOn, viz, {
   //    featureOverColumns: ['name', '_on', '_off']
@@ -234,6 +234,30 @@ map.on('click', function(e) {
       }
     });
 
+interactivity.on('featureClick', updatePopup);
+
+          function updatePopup(event) {
+          if (event.features.length > 0) {
+          const vars = event.features[0].variables;
+          popup.setHTML(`
+            <div class="popup-container">
+            <h2>${vars.name.value}</h2>
+            <ul>
+            <h3>Visits:</h3>
+            <h4>${vars.onboardings.value}</h4></ul>
+            <h3>Category</h3>
+            <h4>${vars.offboardings.value}</h4></ul>
+           
+            </div>
+            `);
+          popup.setLngLat([event.coordinates.lng, event.coordinates.lat]);
+            if (!popup.isOpen()) {
+            popup.addTo(map);
+             }
+              } else {
+            popup.remove();
+              }
+              }
 
     layerOn.addTo(map, 'watername_ocean');
     layerOff.addTo(map);
