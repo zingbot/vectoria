@@ -29,6 +29,7 @@
       box-shadow: 0 0 16px rgba(0, 0, 0, 0.12);
       border-radius: 4px;
       width: 200px;
+      height: 110px;
       color: #2E3C43;
       pointer-events: none;
     }
@@ -90,7 +91,7 @@
   <div id="controls">
     <ul class="actions">
       <li><div></div></li>
-      <li><div id="timestamp"></div></li>
+      <li><div id="timestamp">Red = Offboarding<br>Green = Onboarding</div></li>
     </ul>
 
   </div>
@@ -98,8 +99,8 @@
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      center: [-73.979770, 40.726975],
-      zoom: 12,
+      center: [-73.992602, 40.724138],
+      zoom: 14,
       dragRotate: false
     });
 
@@ -115,6 +116,7 @@
 
     const sourceOn = new carto.source.Dataset(`fake_bus_data`);
      const sourceOff = new carto.source.Dataset(`fake_bus_data`);
+      const sourceLine = new carto.source.Dataset(`fake_bus_line`);
 
     const s = carto.expressions;
 
@@ -132,6 +134,13 @@
       strokeColor: s.rgba(0,255,0,1),
       //filter: torqueExpr,
       width: s.prop('_off')
+    });
+
+     const vizLine = new carto.Viz({
+      color: s.opacity(s.rgb(100, 100, 0),1),
+      strokeColor: s.rgba(100,100,0,1),
+      //filter: torqueExpr,
+      strokeWidth: 8
     });
 
 
@@ -195,6 +204,10 @@ const offLabels = map.addSource("offLabels", {
                   });
           });
 
+map.on('click', function(e) {
+    console.log("Lat, Lon : " + e.latlng.lat + ", " + e.latlng.lng)
+});
+
  // const layer = new carto.layer.Layer(sourceOn, viz, {
   //    featureOverColumns: ['name', '_on', '_off']
   //   });
@@ -203,6 +216,8 @@ const offLabels = map.addSource("offLabels", {
 
      const layerOn = new carto.Layer('layerOn', sourceOn, vizOn);
      const layerOff = new carto.Layer('layerOff', sourceOff, vizOff);
+     const layerLine = new carto.Layer('layerLine', sourceLine, vizLine);
+
 
        const interactivity = new carto.Interactivity([layerOn]);
     const mapboxGLCanvas = document.querySelector('.mapboxgl-canvas');
@@ -222,6 +237,7 @@ const offLabels = map.addSource("offLabels", {
 
     layerOn.addTo(map, 'watername_ocean');
     layerOff.addTo(map);
+    layerLine.addTo(map);
 
 
       //Time
