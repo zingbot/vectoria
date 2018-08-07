@@ -118,7 +118,7 @@
 
 const s = carto.expressions;
 
-const torqueExpr = s.torque(s.prop('issue_time'), 30, s.fade(5, 5))
+const torqueExpr = s.animation(s.prop('issue_time'), 30, s.fade(2, 2))
  
 
     const viz = new carto.Viz({

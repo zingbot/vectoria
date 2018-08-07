@@ -188,8 +188,8 @@
     const map = new mapboxgl.Map({
       container: 'map',
       style: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      center: [ -73.9398961,40.7213905],
-      zoom: 10,
+      center: [ -73.9698961,40.7213905],
+      zoom: 12,
       pitch: 0, // pitch in degrees
     bearing: 0, // bearing in degree
       dragRotate: false
@@ -238,9 +238,9 @@
     `);
 
     const vizCluster = new carto.Viz(`
-    width: blend(clusterSum($unique_visitors), 0, linear(zoom(),2^10,2^13))
+    width: 1
     color: opacity(white,1)
-    strokeWidth:blend(clusterSum(($total_visits)), 0, linear(zoom(),2^10,2^13))
+    strokeWidth:1
     strokeColor: opacity(ramp($top_category, PRISM), .5)`)
 
 
