@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pop-ups | CARTO</title>
+  <title>LinkNYC | CARTO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
@@ -117,13 +117,11 @@ linknyc_locations_vl    `);
 
 const s = carto.expressions;
 
-const torqueExpr = s.torque(s.prop('link_installation_a',s.time('2015-12-28T00:00:00Z'),s.time('2018-05-19T00:00:00Z')), 120, s.fade(1, 1000))
- 
 
     const viz = new carto.Viz({
 color: s.rgb(255, 190, 255),
 strokeColor: s.rgba(0,0,50,.25),
-filter: torqueExpr,
+filter:  s.animation(s.prop('link_installation_a'), 40, s.fade(0.1, 0.3)),
  width: s.div(s.zoom(),500)});
 
     // const layer = new carto.layer.Layer(source, viz, {
