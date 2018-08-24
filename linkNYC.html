@@ -4,10 +4,12 @@
   <title>LinkNYC | CARTO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
-<script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
-  <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
-  <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+  <!-- Include CARTO VL JS -->
+  <script src="http://libs.cartocdn.com/carto-vl/v0.7.0/carto-vl.js"></script>
+  <!-- Include Mapbox GL JS -->
+  <script src="https://libs.cartocdn.com/mapbox-gl/v0.48.0-carto1/mapbox-gl.js"></script>
+  <!-- Include Mapbox GL CSS -->
+  <link href="https://libs.cartocdn.com/mapbox-gl/v0.48.0-carto1/mapbox-gl.css" rel="stylesheet" />
   <style>
     * {
       margin: 0;
@@ -117,11 +119,13 @@ linknyc_locations_vl    `);
 
 const s = carto.expressions;
 
+const torqueExpr = s.animation(s.prop('link_installation_a'), 120, s.fade(1, 1000))
+ 
 
     const viz = new carto.Viz({
 color: s.rgb(255, 190, 255),
 strokeColor: s.rgba(0,0,50,.25),
-filter:  s.animation(s.prop('link_installation_a'), 40, s.fade(0.1, 0.3)),
+filter: aniExpr,
  width: s.div(s.zoom(),500)});
 
     // const layer = new carto.layer.Layer(source, viz, {
