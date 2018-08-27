@@ -131,7 +131,7 @@ countours
     const styleContours = new carto.Viz(`
     color: white
     strokeWidth: zoom()/10
-    filter: torque($contour,4,fade(0.15,0.15))
+    filter: animation($contour,4,fade(0.15,0.15))
    
     `);
     const sourceContoursBase = new carto.source.SQL(`
