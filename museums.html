@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Pop-ups | CARTO</title>
+  <title>Museum Revenue | CARTO</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
-  <script src="https://cartodb.github.io/carto-vl/dist/carto-vl.js"></script>
- <script src="https://unpkg.com/@carto/mapbox-gl@0.44.1-carto1/dist/mapbox-gl.js"></script>
- <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css" rel="stylesheet" />
-  <link href="https://cartodb.github.io/carto-vl/vendor/mapbox-gl-dev.css" rel="stylesheet" />
+ <!-- Include CARTO VL JS -->
+  <script src="https://libs.cartocdn.com/carto-vl/v0.7.0/carto-vl.js"></script>
+  <!-- Include Mapbox GL JS -->
+  <script src="https://libs.cartocdn.com/mapbox-gl/v0.48.0-carto1/mapbox-gl.js"></script>
+  <!-- Include Mapbox GL CSS -->
+  <link href="https://libs.cartocdn.com/mapbox-gl/v0.48.0-carto1/mapbox-gl.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css?family=Montserrat|Rubik:bold|Rubik:medium|Rubik:light|Rubik:italic|Rubik:italic" rel="stylesheet">
   <style>
     * {
@@ -78,7 +80,7 @@
   </style>
 </head>
 <body>
- <div id="mapTitle"> Title</div>
+ <div id="mapTitle"> Museum Revenue</div>
   <div id="map"></div>
   <div id="controls">
     <ul class="actions">
@@ -142,7 +144,7 @@ const interactivity = new carto.Interactivity([layer]);
 
     interactivity.on('featureEnter', event => {
       if (event.features.length > 0) {
-        event.features[0].width.blendTo('$revenue/1000',10)
+        event.features[0].width.blendTo('$revenue/1000',1)
       }
     });
 
