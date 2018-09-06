@@ -258,7 +258,7 @@ const offLabels = map.addSource("offLabels", {
 
 const year = document.querySelector('#timestamp');
         setInterval(() => {
-            year.innerText = Math.floor(torqueExpr.getSimTime());
+            year.innerText = Math.floor(torqueExpr.getProgressValue());
         }, 250);
         console.log(year);
 
