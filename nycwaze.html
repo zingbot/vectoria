@@ -69,9 +69,9 @@
         <script>
             const map = new mapboxgl.Map({
                 container: 'map',
-                style: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+                style: carto.basemaps.darkmatter,
                 center: [-74.0060, 40.7128],
-                zoom: 13,
+                zoom: 12,
             });
 
             carto.setDefaultConfig({
@@ -79,25 +79,36 @@
             });
 
             carto.setDefaultAuth({
-                username: 'traffico-geographica',
-                apiKey: 'RvLxmYkY7qPlmHULpoV7aw'
+                username: 'jferzoco',
+                apiKey: 'cCyZ7rzwrMyhPf99UFrM_A'
             });
-
+            carto.setDefaultAuth({
+                username: 'jferzoco',
+                apiKey: 'aOu-_dm2zhu_2NnWnGCR-g'
+            });
             const s = carto.expressions;
 
-            const source = new carto.source.Dataset("nyc_waze_data_irrgs_copy");
+           
+            const source = new carto.source.SQL(`SElect * from nycwze where (detectiondate >= '2018-04-27T00:00:00Z' AND detectiondate <= '2018-04-27T23:59:59Z')`);
+            const sourceNode = new carto.source.Dataset("masternodesgeo");
             const viz = new carto.Viz(`
-            width: sqrt($regularspeed)*animation(linear($detectiondate),10,fade(.5,.5))+0.6
-            color: opacity(red,ramp(linear($regularspeed),[0.8,.5]))`);
-            // const viz = new carto.Viz({
-            // width: s.sqrt(s.prop('$regularspeed')*s.animation(s.linear(s.prop('$detectiondate'))),10,s.fade(.5,.5))
-            // color: s.opacity(s.namedColor('red'),s.ramp(s.linear(s.prop('$regularspeed'))),[0.8,.5])
-            // });
+              width: ramp(linear($severity),[1,20])*animation(linear($detectiondate),30,fade(2,2))
+              color: ramp($type,prism)
+            `);
+          
+            const vizNode = new carto.Viz(`
+              width:scaled(0,10)
+              color: opacity(blue, 0)
+              strokeWidth:.25
+              strokeColor: black`);
             const layer = new carto.Layer('layer', source, viz);
+             const layerNode = new carto.Layer('layerNode', sourceNode, vizNode);
 
-            layer.addTo(map, 'watername_ocean');
-     let currTime = Math.floor(animationExpr.getProgressValue());
-  document.getElementById('timestamp').innerHTML = new Date(currTime).toDateString();
+            layer.addTo(map);
+            //layerNode.addTo(map);
+     
+        let currTime = Math.floor(animationExpr.getProgressValue());
+      document.getElementById('timestamp').innerHTML = new Date(currTime).toDateString();
 
         </script>
         </body>
