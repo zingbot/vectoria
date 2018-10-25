@@ -120,11 +120,11 @@
 
 const s = carto.expressions;
 
-const animationExpr = s.animation(s.prop('issue_time'), 30, s.fade(2, 2))
+const animationExpr = s.animation(s.prop('issue_time'), 15, s.fade(.3, 1000000))
  
 
     const viz = new carto.Viz({
-color: s.opacity(s.ramp(s.linear(s.prop('qpf'),0.01,10), s.palettes.TEAL),.5),
+color: s.opacity(s.ramp(s.linear(s.prop('qpf'),0.01,10), s.palettes.TEAL),.1),
 strokeColor: s.rgba(0,0,50,.25),
 filter: animationExpr});
 
