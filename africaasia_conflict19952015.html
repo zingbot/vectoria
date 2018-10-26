@@ -197,7 +197,7 @@
         }
 
         #js-pause-btn {
-            background: url('ihttps://carto.com/developers/carto-vl/examples/maps/interactivity/pause.svg') no-repeat;
+            background: url('https://carto.com/developers/carto-vl/examples/maps/interactivity/pause.svg') no-repeat;
             background-position-x: center;
     background-position-y: center;
     background-size: initial;
@@ -263,18 +263,22 @@
 
         // Define layer
           const source = new carto.source.Dataset("africaasia19972015");
-            const viz = new carto.Viz(`
+          const sourceBorders = new carto.source.Dataset("world_borders_hd_1");
+
+          const viz = new carto.Viz(`
                  @duration: 30
                  width:sqrt($fatalities)*zoom()/2
                 color:opacity(ramp($country, vivid),.5)
                 strokeWidth:0 
                 @animation: animation($event_date, @duration,, fade(0.1, 3))
                 filter: @animation`);
+
+           const vizBorders = new carto.Viz('color: opacity(#fff,0) strokeColor:opacity(#fff,.5) strokeWidth:zoom()/10 ');
             const layer = new carto.Layer('layer', source, viz);
-
-            layer.addTo(map);
-
-
+            const layerBorders = new carto.Layer('world_borders',sourceBorders, vizBorders)
+            layerBorders.addTo(map)
+            layer.addTo(map, 'world_borders');
+             
         // Elements
         const $playBtn = document.getElementById('js-play-btn');
         // const $stopBtn = document.getElementById('js-stop-btn');
