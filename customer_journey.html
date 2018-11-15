@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>African and Asian Conflict, 1995-2015</title>
+    <title>Mastercard Journey Data</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta charset="UTF-8">
     <!-- Include CARTO VL JS -->
@@ -197,7 +197,7 @@
         }
 
         #js-pause-btn {
-            background: url('ihttps://carto.com/developers/carto-vl/examples/maps/interactivity/pause.svg') no-repeat;
+            background: url('https://carto.com/developers/carto-vl/examples/maps/interactivity/pause.svg') no-repeat;
             background-position-x: center;
     background-position-y: center;
     background-size: initial;
@@ -217,10 +217,10 @@
     <aside class="toolbox">
         <div class="box">
             <header>
-                <h1>African and Asian Conflict, 1995-2015</h1>
+                <h1>Customer Journey Data, May-July 2018</h1>
             </header>
             <section>
-                <p class="description open-sans">Control animations by issuing "play", "pause" and "set" commands (timeline is TBD)</p>
+                <p class="description open-sans">From the 5th Avenue and 59th Street, New York City: Block 360610112021001</p>
             </section>
             <section style="margin-top: 15px;">
                 <input type="button" id="js-play-btn">
@@ -230,7 +230,7 @@
             <hr>
             <section>
                 <span style="margin-right: 5px" class="open-sans">Duration (seconds)</span>
-                <input class="white-thumb" type="range" id="js-duration-range" min="1" max="1200" step="1">
+                <input class="white-thumb" type="range" id="js-duration-range" min="1" max="20" step="10">
                 <span style="margin-left: 5px" class="open-sans" id="js-duration-span">10</span>
             </section>
         </div>
@@ -246,8 +246,8 @@
         const map = new mapboxgl.Map({
             container: 'map',
             style: carto.basemaps.darkmatter,
-            center: [40, 10.3489],
-            zoom: 2,
+            center: [-100,40],
+            zoom: 3.5,
         });
 
         const nav = new mapboxgl.NavigationControl({
@@ -260,18 +260,29 @@
                 username: 'jferzoco',
                 apiKey: 'default_public'
             });
-
+      
         // Define layer
-          const source = new carto.source.Dataset("africaasia19972015");
-            const viz = new carto.Viz(`
-                 @duration: 30
-                 width:sqrt($fatalities)*zoom()/2
-                color:opacity(ramp($country, vivid),.5)
-                strokeWidth:0 
-                @animation: animation($event_date, @duration,, fade(0.1, 3))
-                filter: @animation`);
-            const layer = new carto.Layer('layer', source, viz);
+        const source = new carto.source.Dataset("journey_5thave_geocoded");
+          const viz = new carto.Viz(`
+                 @duration: 15
+                 width:$spend_share*10
+                color: opacity(orange,.5)
+                strokeWidth:.25 
+                strokeColor: #fff
+                @animation: animation($new_month, @duration, fade(1,4))
+                filter: @animation
+                `);
+        const layer = new carto.Layer('layer', source, viz);
 
+                const sourceZips = new carto.source.Dataset("us_zips");
+          const vizZips = new carto.Viz(`
+                 color:opacity(white,0)
+                 strokeColor:#bababa
+                 strokeWidth:ramp(zoomrange([7,10,14]), [0,0,1])
+                `);
+        const layerZips = new carto.Layer('layerZips', sourceZips, vizZips);
+
+            layerZips.addTo(map);
             layer.addTo(map);
 
 

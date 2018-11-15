@@ -39,13 +39,19 @@
             });
 
             carto.setDefaultAuth({
-                username: 'jferzoco',
+                username: 'tnris-flood',
                 apiKey: 'default_public'
             });
 
 
-            const source = new carto.source.SQL("SELECT *, observed::numeric as obs_int from national_shapefile_obs");
-            const viz = new carto.Viz(`width:sqrt($obs_int*zoom()/1000) color:opacity(#71CAF3,.5) strokeWidth:0 `);
+            const source = new carto.source.SQL("SELECT * FROM nws_ahps_gauges_texas");
+            // const viz = new carto.Viz(`width:sqrt($obs_int*zoom()/1000) color:opacity(#71CAF3,.5) strokeWidth:0 `);
+             const viz = new carto.Viz(`
+                width:zoom()*animation($timestamp, 2, fade(.1,.1))
+                color:opacity(red,1) 
+                strokeWidth:0 
+
+                     `);
             const layer = new carto.Layer('layer', source, viz);
 
             layer.addTo(map, 'watername_ocean');
