@@ -215,7 +215,7 @@
 
 <body>
     <div id="map"></div>
-    <aside class="toolbox">
+   <!--  <aside class="toolbox">
         <div class="box">
             <header>
                 <h1>African and Asian conflict, 1995-2015</h1>
@@ -235,7 +235,7 @@
                 <span style="margin-left: 5px" class="open-sans" id="js-duration-span">10</span>
             </section>
         </div>
-    </aside>
+    </aside> -->
     <div id="loader">
         <div class="CDB-LoaderIcon CDB-LoaderIcon--big">
             <svg class="CDB-LoaderIcon-spinner" viewBox="0 0 50 50">
@@ -269,10 +269,9 @@
           const viz = new carto.Viz(`
                  @duration: 30
                  width:sqrt($fatalities)*zoom()/2
-                color:opacity(ramp($country, vivid),.5)
+                color:#ffbb00
                 strokeWidth:0 
-                @animation: animation($event_date, @duration,, fade(0.1, 3))
-                filter: @animation`);
+                `);
 
            const vizBorders = new carto.Viz('color: opacity(#fff,0) strokeColor:opacity(#fff,.5) strokeWidth:zoom()/10 ');
             const layer = new carto.Layer('layer', source, viz);
@@ -288,43 +287,43 @@
         const $timeRange = document.getElementById('js-time-range');
         const $spanDuration = document.getElementById('js-duration-span');
 
-        // Callbacks
-        $durationRange.onchange = () => {
-            const duration = parseInt($durationRange.value, 10);
-            viz.variables.duration = $spanDuration.innerHTML = duration;
-        }
+        // // Callbacks
+        // $durationRange.onchange = () => {
+        //     const duration = parseInt($durationRange.value, 10);
+        //     viz.variables.duration = $spanDuration.innerHTML = duration;
+        // }
 
-        $timeRange.onchange = () => {
-            viz.variables.animation.setProgressPct($timeRange.value);
-        }
+        // $timeRange.onchange = () => {
+        //     viz.variables.animation.setProgressPct($timeRange.value);
+        // }
 
-        $playBtn.onclick = () => {
-            viz.variables.animation.play()
-            $playBtn.style.display = 'none';
-            $pauseBtn.style.display = 'initial';
-        };
+        // $playBtn.onclick = () => {
+        //     viz.variables.animation.play()
+        //     $playBtn.style.display = 'none';
+        //     $pauseBtn.style.display = 'initial';
+        // };
 
-        $pauseBtn.onclick = () => {
-            viz.variables.animation.pause();
-            $pauseBtn.style.display = 'none';
-            $playBtn.style.display = 'initial';
-        };
+        // $pauseBtn.onclick = () => {
+        //     viz.variables.animation.pause();
+        //     $pauseBtn.style.display = 'none';
+        //     $playBtn.style.display = 'initial';
+        // };
 
-        $playBtn.style.display = 'none';
+        // $playBtn.style.display = 'none';
 
-        let last = $timeRange.value;
+        // let last = $timeRange.value;
 
-        $timeRange.onchange = () => {
-            viz.variables.animation.setProgressPct($timeRange.value);
-            last = $timeRange.value;
-        }
+        // $timeRange.onchange = () => {
+        //     viz.variables.animation.setProgressPct($timeRange.value);
+        //     last = $timeRange.value;
+        // }
 
-        layer.on('updated', () => {
-            if ($timeRange.value == last) {
-                $timeRange.value = viz.variables.animation.getProgressPct();
-                last = $timeRange.value;
-            }
-        });
+        // layer.on('updated', () => {
+        //     if ($timeRange.value == last) {
+        //         $timeRange.value = viz.variables.animation.getProgressPct();
+        //         last = $timeRange.value;
+        //     }
+        // });
 
         layer.on('loaded', hideLoader);
 
