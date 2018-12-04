@@ -19,7 +19,7 @@
         }
 
         .box {
-            width: 320px;
+            width: 220px;
             background: #f2f2f2;
         }
 
@@ -276,8 +276,8 @@
            const vizBorders = new carto.Viz('color: opacity(#fff,0) strokeColor:opacity(#fff,.5) strokeWidth:zoom()/10 ');
             const layer = new carto.Layer('layer', source, viz);
             const layerBorders = new carto.Layer('world_borders',sourceBorders, vizBorders)
-            layerBorders.addTo(map)
-            layer.addTo(map, 'world_borders');
+            //layerBorders.addTo(map)
+            layer.addTo(map);
              
         // Elements
         const $playBtn = document.getElementById('js-play-btn');
