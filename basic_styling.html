@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="https://libs.cartocdn.com/carto-vl/v1.0.0/carto-vl.min.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://carto.com/developers/carto-vl/examples/maps/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Add map container -->
+    <div id="map"></div>
+    <script>
+        // Add basemap and set properties
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: carto.basemaps.voyager,
+            center: [0, 30],
+            zoom: 2
+        });
+        //** CARTO VL functionality begins here **//
+        // Define user
+        carto.setDefaultAuth({
+            username: 'cartovl',
+            apiKey: 'default_public'
+        });
+        // Define source
+        const source = new carto.source.Dataset('populated_places');
+        // Define Viz object and custom style
+        //STEP 1: Basic styling properties
+         const viz = new carto.Viz(`
+            color: purple
+            width: 5
+        `);
+   
+        // STEP 2: Expressions assigned to properties can be constants (red,7) 
+        // or functions (sqrt, +, or ramp)
+        //  const viz = new carto.Viz(`
+        //     width: sqrt(20)
+        //     color: rgb(25,100,187) 
+        //     strokeWidth: 5-4
+        //     strokeColor: #00EED1
+        // `);
+        // STEP 3: Can be data-driven access layer properties with $ 
+        // const viz = new carto.Viz(`
+        //     width: sqrt($pop_max)/200 
+        //     color: rgb(25,100,187)
+        //     strokeWidth: 1
+        //     strokeColor: #00EED1
+        // `);
+        // STEP 4: Property values matched to outputs with RAMPS
+        // const viz = new carto.Viz(`
+        //     width: ramp($pop_max,[1,50])
+        //     color: ramp($pop_max,[orange,slateblue])
+        //     strokeColor: rgba(255,255,255,0.5)
+        //     strokeWidth: 0.5
+        // `);
+        // Define map layer
+        const layer = new carto.Layer('layer', source, viz);
+        // Add map layer
+        layer.addTo(map);
+    </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Million walks in Central Park | CARTO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <script src="https://libs.cartocdn.com/carto-vl/v1.0.0/carto-vl.min.js"></script>
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js"></script>
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://carto.com/developers/carto-vl/examples/maps/style.css" rel="stylesheet">
+</head>
+
+<body>
+    <div id="map"></div>
+    <aside class="toolbox">
+        <div class="box">
+            <header>
+                <h1>A million walks in Central Park</h1>
+            </header>
+            <!-- Add legend data -->
+            <section>
+                <div id="controls">
+                    <ul id="content"></ul>
+                </div>
+            </section>
+        </div>
+    </aside>
+
+    <script>
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: carto.basemaps.darkmatter,
+            center: [-73.967039, 40.778740],
+            zoom: 14.5
+        });
+        carto.setDefaultAuth({
+            username: 'cartovl',
+            apiKey: 'default_public'
+        });
+        const source = new carto.source.Dataset("central_park_million_walks");
+        
+        // STEP 1: Color all category values with CARTOColor scheme
+        const viz = new carto.Viz(`
+            color: ramp(($travel_mode),bold)
+            width: 1
+            strokeWidth: 0
+        `);
+        // STEP 2: Color all category values with custom color list
+        // const viz = new carto.Viz(`
+        //     color: ramp(($travel_mode),[red,orange,yellow,green,blue])
+        //     width: 1.5
+        //     strokeWidth: 0
+        // `);
+        // STEP 3: Color specific categories with buckets and custom color list
+        // const viz = new carto.Viz(`
+        //     color: ramp(buckets($travel_mode,['walking','running']),[blue,fuchsia])
+        //     width: 1.5
+        //     strokeWidth: 0
+        // `);
+        // STEP 4: Color specific categories with buckets overwrite default other color
+        //  const viz = new carto.Viz(`
+        //     color: ramp(buckets($travel_mode,['walking','running']),[blue,fuchsia],greenyellow)
+        //     width: 1.5
+        //     strokeWidth: 0
+        // `);
+        // STEP 5: Many categories
+        //  const viz = new carto.Viz(`
+        //     color: ramp($nearest_poi,[blue,fuchsia,orange,yellow])
+        //     width: 1.5
+        //     strokeWidth: 0
+        // `);
+        // SUMMARIES
+        
+        // STEP 6: Summarize with symbology
+        // const viz = new carto.Viz(`
+        //    color: ramp(top($nearest_poi,4),[blue,fuchsia,orange,greenyellow])
+        //    width: 1.5
+        //    strokeWidth: 0
+        // `);
+        // STEP 7: Summarize with aggregations
+        // const viz = new carto.Viz(`
+        //     color: ramp(top($nearest_poi,4),[blue,fuchsia,orange,greenyellow])
+        //     width: 1.5
+        //     strokeWidth: 0
+        //     resolution: 8
+        // `);
+        // STEP 8: Summarize aggregated values inside of cells
+        // const viz = new carto.Viz(`
+        //     color: ramp(top($nearest_poi,4),[blue,fuchsia,orange,greenyellow])
+        //     width: clusterAVG($dwelltime_minutes)/2
+        //     strokeWidth: 0
+        //     resolution: 8
+        // `);
+        
+        //STEP 9: Summarize by filtering data values inside of cells
+        // const viz = new carto.Viz(`
+        //     color: ramp(top($nearest_poi,4),[blue,fuchsia,orange,greenyellow])
+        //     width: 1.5
+        //     strokeWidth: 0
+        //     filter: $travel_mode == 'walking'
+        // `);
+        //STEP 10: Animate filtered values + ramp symbol sizes
+        // const viz = new carto.Viz(`
+        //     color: ramp(top($nearest_poi,4),[turquoise,fuchsia,greenyellow,orange])
+        //     width: ramp($dwelltime_minutes,[1,5])
+        //     strokeWidth: 0
+        //     filter: $travel_mode == 'walking' AND animation(linear($datetime),20, fade(0.8,0.8))
+        // `);
+        
+        //Animate and color by other values
+        // const viz = new carto.Viz(`
+        //     color: ramp($time_of_day,sunset)
+        //     width: ramp($dwelltime_minutes,[1,5])
+        //     strokeWidth: 0
+        //     filter: $travel_mode == 'walking' AND animation(linear($datetime),20, fade(0.8,0.8))
+        // `);
+        
+        const layer = new carto.Layer('layer', source, viz);
+        layer.addTo(map);
+        //** ADD LEGEND **//
+        // A function to convert map colors to HEX values for legend
+        function rgbToHex(color) {
+            return "#" + ((1 << 24) + (color.r << 16) + (color.g << 8) + color.b).toString(16).slice(1);
+        }
+        // When layer loads, trigger legend event
+        layer.on('loaded', () => {
+            // Request data for legend from the layer viz
+            const colorLegend = layer.viz.color.getLegendData();
+            let colorLegendList = '';
+            // Create list elements for legend
+            colorLegend.data.forEach((legend, index) => {
+                const color = rgbToHex(legend.value);
+                // Style for legend items based on geometry type
+                colorLegendList +=
+                    `<li><span class="point-mark" style="background-color:${color}; border: 1px solid white;"></span><span>${legend.key.replace('CARTO_VL_OTHERS', 'Others')}</span></li>\n`;
+            });
+            // Place list items in the content section of the title/legend box
+            document.getElementById('content').innerHTML = colorLegendList;
+        });
+    </script>
+
+</body>
+</html>
